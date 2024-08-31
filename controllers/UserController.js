@@ -5,6 +5,7 @@ const passport = require('passport');
 const {logIn} = require("./PassportController");
 const alphaErr = "must only contain letters.";
 const lengthErr = "must be between 1 and 10 characters.";
+const crypto = require('crypto');
 
 
 const validateUser = [
@@ -15,7 +16,7 @@ const validateUser = [
 ];
 
 exports.createUserGet = (req,res)=>{
-    res.render("index")
+    res.render("createUserForm")
 }
 
 exports.createUserPost = [validateUser, async (req,res,next)=>{
@@ -23,7 +24,8 @@ exports.createUserPost = [validateUser, async (req,res,next)=>{
     try {
         bcrypt.hash(req.body.password, 10, async (err, hashedPassword) => {
             if(err) return next(err);
-            await query.createUser(req.body.username, hashedPassword);
+            req.body.password = hashedPassword
+            await query.createUser(req.body);
             res.redirect("/");
         });
 
@@ -34,10 +36,32 @@ exports.createUserPost = [validateUser, async (req,res,next)=>{
 
 
 exports.loginGet = (req,res)=>{
-    res.render("index")
+    res.render("loginForm")
 }
 
 exports.loginPost = logIn
+
+
+exports.createShareLink = async (res,req)=>{
+    const dateObj = new Date()
+    dateObj.setHours(dateObj.getHours() + 6)
+
+    const linkData = {
+        ownedUser: res.user.id,
+        expiredAt: dateObj
+    }
+    const newShareLink = await query.createShareLink(linkData)
+    req.redirect("/")
+}
+
+exports.logoutPost = (req,res,next)=>{
+    req.logout((err) => {
+        if (err) {
+            return next(err);
+        }
+        res.redirect("/");
+    });
+}
 
 
 

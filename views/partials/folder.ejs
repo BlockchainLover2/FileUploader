@@ -1,0 +1,34 @@
+<head>
+    <style>
+        div{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        div:hover{
+            cursor: pointer;
+        }
+        .img{
+            display: flex;
+            flex-direction: column;
+        }
+    </style>
+</head>
+
+
+<div class="folder">
+    <%if(folder.url === undefined){%>
+    <form action="<%=currentPath+folder.path%>" method ="get">
+        <button><%=folder.name%></button>
+    </form>
+    <%}else{%>
+    <div class="img">
+        <img src=<%=folder.url%> alt="folder">
+        <form action=<%=folder.url.substring(0,48)  +"/fl_attachment"+ folder.url.substring(48) %>>
+            <button>Download</button>
+        </form>
+    </div>
+
+    <%}%>
+
+</div>

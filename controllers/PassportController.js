@@ -15,6 +15,7 @@ const localStrategy = new LocalStrategy(async (username, password, done) => {
                 return done(null, false, { message: "Incorrect password" });
             }
             return done(null, user);
+
         } catch(err) {
             return done(err);
         }
@@ -27,20 +28,20 @@ async function serializeUser(user, done){
 
 async function deserializeUser(id, done){
     try {
-        const { rows } = await query.getUserById(id)
-        const user = rows[0];
-
+        const user = await query.getUserById(id)
         done(null, user);
     } catch(err) {
         done(err);
     }
 }
 
-const logIn = passport.authenticate("local", {
-    successRedirect: "/",
-    failureRedirect: "/"
-
-})
+function logIn(req,res){
+    passport.authenticate("local", {
+        successRedirect: "/",
+        failureRedirect: "/fail"
+    })(req,res)
+    res.cookie("hasLogged",true,{maxAge:1000*60*60})
+}
 
 module.exports = {
     localStrategy,

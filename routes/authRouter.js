@@ -11,7 +11,9 @@ authRouter.get("/log-in", userController.loginGet)
 
 authRouter.post("/log-in",userController.loginPost)
 
-authRouter.post("/log-out",userController.createUserPost)
+authRouter.post("/log-out",userController.logoutPost)
+
+authRouter.post("/share",userController.createShareLink)
 
 
 module.exports = authRouter

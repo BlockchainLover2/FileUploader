@@ -1,0 +1,60 @@
+<head>
+    <style>
+        .folders{
+            display: flex;
+            gap: 2rem;
+        }
+        .folder{
+            background: pink;
+            display: flex;
+            justify-content: center;
+        }
+
+        button{
+            transition: transform 0.2s;
+            cursor: pointer;
+        }
+
+        button:hover{
+            transform: scale(2);
+
+        }
+
+        .folder button{
+            padding: 2rem;
+
+        }
+        form{
+            margin: 0;
+        }
+    </style>
+</head>
+
+
+<p><%=user?.username%></p>
+<%if(hasLoggedBefore && user=== undefined){ %>
+    <p>YOUR SESSION HAS EXPIRED</p>
+<%}%>
+<%if(user === undefined){%>
+    <a href="/auth/log-in">Log In</a>
+    <a href="/auth/sign-up">Sign Up</a>
+<%}else{%>
+    <form action="/auth/log-out" method="post">
+        <button>Log Out</button>
+    </form>
+    <form action="/auth/share" method="post">
+        <button>Share</button>
+    </form>
+
+<%}%>
+
+<div class="folders">
+    <%folders?.forEach(x=>{ %>
+       <%-include("partials/folder",{folder:x,currentPath:currentPath})%>
+    <%})%>
+        <%if(user !== undefined){%>
+        <%-include("partials/uploadFile",{currentPath:currentPath})%>
+        <a href=<%=currentPath%>/create-folder>Create Folder</a>
+        <%}%>
+
+</div>
